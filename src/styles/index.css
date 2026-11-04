@@ -105,6 +105,25 @@ h1, h2, h3 { text-wrap: balance; }
 
 input[type='range'].volume { accent-color: var(--accent-core); width: 100%; min-height: 2.5rem; cursor: pointer; }
 
+.input {
+  width: 100%;
+  min-height: 2.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  padding: 0 1rem;
+  outline: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+.input:focus {
+  border-color: var(--accent-core);
+  box-shadow: 0 0 0 3px var(--accent-pastel);
+}
+.input::placeholder { color: var(--color-muted); }
+
 /* Track progress — driven by the --progress var App writes every frame */
 .progress-track { height: 3px; border-radius: 999px; background: var(--border-subtle); overflow: hidden; }
 .progress-fill {

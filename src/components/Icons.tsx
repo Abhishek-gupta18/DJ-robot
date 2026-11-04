@@ -42,3 +42,19 @@ export function VolumeIcon({ muted, className = 'h-4 w-4' }: IconProps & { muted
     </svg>
   );
 }
+
+export function SpotifyIcon({ className = 'h-4 w-4' }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true" fill="currentColor">
+      <path d="M12 0C5.374 0 0 5.373 0 12c0 6.627 5.373 12 12 12s12-5.373 12-12c0-6.627-5.373-12-12-12zm5.521 17.34c-.18.33-.54.48-.84.33-1.83-1.08-3.72-1.62-5.67-1.62-3.42 0-6.33 1.23-8.25 3.3-.48.54-.48 1.29 0 1.83.42.54 1.29.54 1.71 0 2.58-1.5 5.58-2.58 8.43-2.58 1.74 0 3.42.48 5.01 1.41.48.27.66.03.78-.45.12-.51-.03-.96-.45-1.17z" />
+    </svg>
+  );
+}
+
+export function YouTubeIcon({ className = 'h-4 w-4' }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true" fill="currentColor">
+      <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+    </svg>
+  );
+}

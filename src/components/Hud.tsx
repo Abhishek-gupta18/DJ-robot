@@ -12,7 +12,7 @@ export function TopBar({ player }: { player: PlayerApi }) {
           <motion.img
             key={player.accent}
             src={LOGO_FOR[player.accent]}
-            alt="param20h"
+            alt="Abhishek-gupta18"
             className="absolute inset-0 h-full w-auto"
             initial={{ opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}

@@ -6,11 +6,26 @@ import { StartOverlay } from './components/StartOverlay';
 import { Dock, TopBar } from './components/Hud';
 import { Stage } from './scene/Stage';
 import { kick, scene, type RobotMode } from './scene/state';
+import { SPOTIFY_PLAYLIST_ID, type CustomQueue } from './data/playlist';
+
+function getCustomQueue(): CustomQueue | undefined {
+  const tracksParam = new URLSearchParams(window.location.search).get('spotify_tracks');
+  const playlistId = SPOTIFY_PLAYLIST_ID;
+  if (tracksParam && playlistId) {
+    return {
+      videoIds: tracksParam.split(',').filter(Boolean),
+      source: 'spotify',
+      name: `Spotify Playlist (${playlistId})`,
+    };
+  }
+  return undefined;
+}
 
 export default function App() {
   const mountRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLElement>(null);
-  const player = usePlayer(mountRef);
+  const customQueue = getCustomQueue();
+  const player = usePlayer(mountRef, customQueue);
 
   useEffect(() => {
     let mode: RobotMode = 'idle';
@@ -21,7 +36,7 @@ export default function App() {
     }
     scene.mode = mode;
     scene.started = player.started;
-    scene.loading = player.status === 'loading';
+    scene.loading = player.status === 'loading' || player.status === 'loading-spotify';
     scene.error = player.status === 'error';
     scene.accent = player.accent;
     scene.trackChangedAt = player.trackChangedAt;

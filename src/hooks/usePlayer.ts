@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ACCENTS, PLAYLIST_ID, type Accent } from '../data/playlist';
+import { ACCENTS, PLAYLIST_ID, type Accent, type CustomQueue } from '../data/playlist';
 import { loadYouTubeApi } from '../lib/youtube';
 import { shuffle } from '../lib/shuffle';
 
@@ -9,7 +9,8 @@ export type PlayerStatus =
   | 'playing'
   | 'paused'
   | 'buffering'
-  | 'error';
+  | 'error'
+  | 'loading-spotify';
 
 export interface Track {
   id: string;
@@ -30,7 +31,15 @@ function readStoredVolume(): number {
   }
 }
 
-export function usePlayer(mountRef: React.RefObject<HTMLDivElement>) {
+function loadPlaylistById(_YTApi: typeof YT, player: YT.Player, playlistId: string): void {
+  player.cuePlaylist({ listType: 'playlist', list: playlistId });
+}
+
+function loadCustomQueue(_YTApi: typeof YT, player: YT.Player, videoIds: string[]): void {
+  player.cuePlaylist(videoIds);
+}
+
+export function usePlayer(mountRef: React.RefObject<HTMLDivElement>, customQueue?: CustomQueue) {
   const playerRef = useRef<YT.Player | null>(null);
   const queueRef = useRef<string[]>([]);
   const indexRef = useRef(0);
@@ -64,7 +73,6 @@ export function usePlayer(mountRef: React.RefObject<HTMLDivElement>) {
     if (!queue.length) return;
     let i = indexRef.current + 1;
     if (i >= queue.length) {
-      // Queue exhausted: reshuffle, never replaying the track that just ended first.
       queueRef.current = shuffle(queue, queue[indexRef.current]);
       i = 0;
     }
@@ -96,6 +104,22 @@ export function usePlayer(mountRef: React.RefObject<HTMLDivElement>) {
         pollTimer = window.setTimeout(() => tryReadPlaylist(attempt + 1), 250);
       };
 
+      const tryReadCustomQueue = (attempt = 0) => {
+        const ids = playerRef.current?.getPlaylist();
+        if (ids?.length) {
+          queueRef.current = shuffle(ids);
+          setQueueLength(ids.length);
+          setStatus('ready');
+          return;
+        }
+        if (attempt > 40) {
+          setStatus('error');
+          setError('Could not load the custom queue.');
+          return;
+        }
+        pollTimer = window.setTimeout(() => tryReadCustomQueue(attempt + 1), 250);
+      };
+
       playerRef.current = new YTApi.Player(target, {
         width: 0,
         height: 0,
@@ -103,8 +127,14 @@ export function usePlayer(mountRef: React.RefObject<HTMLDivElement>) {
         events: {
           onReady: (e) => {
             e.target.setVolume(readStoredVolume());
-            e.target.cuePlaylist({ listType: 'playlist', list: PLAYLIST_ID });
-            tryReadPlaylist();
+            if (customQueue) {
+              setStatus('loading-spotify');
+              loadCustomQueue(YTApi, e.target, customQueue.videoIds);
+              tryReadCustomQueue();
+            } else {
+              loadPlaylistById(YTApi, e.target, PLAYLIST_ID);
+              tryReadPlaylist();
+            }
           },
           onStateChange: (e) => {
             const S = YTApi.PlayerState;
@@ -155,7 +185,7 @@ export function usePlayer(mountRef: React.RefObject<HTMLDivElement>) {
       playerRef.current?.destroy();
       playerRef.current = null;
     };
-  }, [mountRef, next]);
+  }, [mountRef, next, customQueue]);
 
   // Media Session: lock-screen / hardware key controls.
   useEffect(() => {
@@ -163,7 +193,7 @@ export function usePlayer(mountRef: React.RefObject<HTMLDivElement>) {
     navigator.mediaSession.metadata = new MediaMetadata({
       title: track.title,
       artist: track.author,
-      album: 'Robot DJ · param20h',
+      album: 'Robot DJ · Abhishek-gupta18',
       artwork: [{ src: track.thumb, sizes: '320x180', type: 'image/jpeg' }],
     });
   }, [track]);

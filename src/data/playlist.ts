@@ -8,6 +8,9 @@ export const PLAYLIST_ID =
   new URLSearchParams(window.location.search).get("list") ??
   DEFAULT_PLAYLIST_ID;
 
+export const SPOTIFY_PLAYLIST_ID =
+  new URLSearchParams(window.location.search).get("spotify");
+
 export const ACCENTS = ["blue", "red", "yellow", "green"] as const;
 export type Accent = (typeof ACCENTS)[number];
 
@@ -22,8 +25,14 @@ export const ACCENT_HEX: Record<
 };
 
 export const LOGO_FOR: Record<Accent, string> = {
-  blue: `${import.meta.env.BASE_URL}param20h-logo.svg`,
-  red: `${import.meta.env.BASE_URL}param20h-logo.svg`,
-  yellow: `${import.meta.env.BASE_URL}param20h-logo.svg`,
-  green: `${import.meta.env.BASE_URL}param20h-logo.svg`,
+  blue: `${import.meta.env.BASE_URL}abhishek-gupta18-logo.svg`,
+  red: `${import.meta.env.BASE_URL}abhishek-gupta18-logo.svg`,
+  yellow: `${import.meta.env.BASE_URL}abhishek-gupta18-logo.svg`,
+  green: `${import.meta.env.BASE_URL}abhishek-gupta18-logo.svg`,
 };
+
+export interface CustomQueue {
+  videoIds: string[];
+  source: 'youtube' | 'spotify';
+  name?: string;
+}
