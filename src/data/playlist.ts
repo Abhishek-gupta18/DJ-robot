@@ -2,7 +2,7 @@
  * Hardcoded YouTube playlist (must be public or unlisted, with embeddable videos).
  * Replace the placeholder with the real playlist ID. For quick testing, `?list=<id>` in the URL overrides it.
  */
-const DEFAULT_PLAYLIST_ID = "PLeM8X59cdeyg";
+const DEFAULT_PLAYLIST_ID = "RDEM5-vO2zQHTHdDS3Q-8I5B0g";
 
 export const PLAYLIST_ID =
   new URLSearchParams(window.location.search).get("list") ??
