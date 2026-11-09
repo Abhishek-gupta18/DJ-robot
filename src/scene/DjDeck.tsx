@@ -139,7 +139,7 @@ export function DjDeck() {
         anchorX="center"
         anchorY="middle"
       >
-        PARAM20H
+        Abhishek-gupta18
       </Text>
 
       <Turntable x={-1.15} refs={leftDeck} />
