@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { usePlayer } from './hooks/usePlayer';
 import { HiddenYouTube } from './components/HiddenYouTube';
@@ -22,10 +22,17 @@ function getCustomQueue(): CustomQueue | undefined {
 }
 
 export default function App() {
+  const [darkMode, setDarkMode] = useState(() => window.localStorage.getItem('robot-dj-theme') === 'dark');
   const mountRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLElement>(null);
   const customQueue = getCustomQueue();
   const player = usePlayer(mountRef, customQueue);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = darkMode ? 'dark' : 'light';
+    window.localStorage.setItem('robot-dj-theme', darkMode ? 'dark' : 'light');
+    scene.darkMode = darkMode;
+  }, [darkMode]);
 
   useEffect(() => {
     let mode: RobotMode = 'idle';
@@ -79,8 +86,8 @@ export default function App() {
 
   return (
     <main ref={mainRef} data-accent={player.accent} className="relative h-dvh w-full overflow-hidden">
-      <Stage />
-      <TopBar player={player} />
+      <Stage darkMode={darkMode} />
+      <TopBar player={player} darkMode={darkMode} onToggleTheme={() => setDarkMode((value) => !value)} />
       <AnimatePresence>{!player.started && <StartOverlay key="start" player={player} />}</AnimatePresence>
       {player.started && <Dock player={player} />}
       <HiddenYouTube ref={mountRef} />

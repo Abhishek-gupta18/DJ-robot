@@ -49,15 +49,19 @@ function CameraRig() {
 
     // 0 = orbit, 1 = framed. Eased so the dolly starts and lands softly.
     const w = scene.startedAt < 0 ? 0 : smoothstep(0, 1, introProgress(t));
-    const tx = orbitX + (framedX - orbitX) * w;
-    const ty = orbitY + (framedY - orbitY) * w;
-    const tz = orbitZ + (distance - orbitZ) * w;
+    const tour = scene.mode === 'playing' ? scene.cameraTour : 0;
+    const frontX = orbitX + (framedX - orbitX) * w;
+    const frontY = orbitY + (framedY - orbitY) * w;
+    const frontZ = orbitZ + (distance - orbitZ) * w;
+    const tx = frontX + (scene.cameraTourSide - frontX) * tour;
+    const ty = frontY + (3.2 - frontY) * tour;
+    const tz = frontZ + (distance * 1.18 - frontZ) * tour;
     const lambda = w > 0 && w < 1 ? 12 : 3;
 
     cam.position.x = damp(cam.position.x, tx, lambda, dt);
     cam.position.y = damp(cam.position.y, ty, lambda, dt);
     cam.position.z = damp(cam.position.z, tz, w > 0 && w < 1 ? 12 : 4, dt);
-    lookTarget.set(0, lookY + (1 - w) * 0.2, 0);
+    lookTarget.set(-0.2 * tour, lookY + (1 - w) * 0.2 + 0.15 * tour, 0);
     LOOK_AT.lerp(lookTarget, 1 - Math.exp(-8 * dt));
     cam.lookAt(LOOK_AT);
   });
@@ -72,7 +76,15 @@ function Conductor() {
     const t = state.clock.elapsedTime;
     if (scene.started && scene.startedAt < 0) scene.startedAt = t;
     const playing = scene.mode === 'playing';
-    if (playing) scene.beat += (dt * BPM) / 60;
+    if (playing) {
+      scene.beat += (dt * BPM) / 60;
+      scene.playTime += dt;
+    }
+    const tourPhase = scene.playTime % 32;
+    scene.cameraTourSide = Math.floor(scene.playTime / 32) % 2 === 0 ? 4.4 : -4.4;
+    scene.cameraTour = playing
+      ? smoothstep(23, 25, tourPhase) * (1 - smoothstep(29, 31, tourPhase))
+      : 0;
     scene.energy = damp(scene.energy, playing ? 1 : 0, playing ? 1.5 : 3, dt);
     updateMaterials(dt, t);
   }, -1);
@@ -83,7 +95,7 @@ const SECTION_BASE = new THREE.Color('#c7d2e1');
 const sectionTarget = new THREE.Color();
 
 /** Infinite grid whose section lines flash toward the accent on the kick. */
-function Floor() {
+function Floor({ darkMode }: { darkMode: boolean }) {
   const grid = useRef<THREE.Mesh>(null);
   useFrame(() => {
     const mat = grid.current?.material as THREE.ShaderMaterial | undefined;
@@ -100,10 +112,10 @@ function Floor() {
       args={[40, 40]}
       cellSize={0.5}
       cellThickness={0.6}
-      cellColor="#dbe3ee"
+      cellColor={darkMode ? '#263243' : '#dbe3ee'}
       sectionSize={2}
       sectionThickness={1}
-      sectionColor="#c7d2e1"
+      sectionColor={darkMode ? '#344154' : '#c7d2e1'}
       fadeDistance={22}
       fadeStrength={1.5}
       infiniteGrid
@@ -123,7 +135,7 @@ function Effects({ quality }: { quality: 'high' | 'low' }) {
   );
 }
 
-export function Stage() {
+export function Stage({ darkMode }: { darkMode: boolean }) {
   const [quality, setQuality] = useState<'high' | 'low'>('high');
 
   useEffect(() => {
@@ -154,15 +166,15 @@ export function Stage() {
           onFallback={() => setQuality('low')}
         />
         <AdaptiveDpr pixelated={false} />
-        <color attach="background" args={['#f4f7fb']} />
-        <fog attach="fog" args={['#f4f7fb', 9, 22]} />
-        <hemisphereLight args={['#ffffff', '#d6deea', 1.1]} />
+        <color attach="background" args={[darkMode ? '#101722' : '#f4f7fb']} />
+        <fog attach="fog" args={[darkMode ? '#101722' : '#f4f7fb', 9, 22]} />
+        <hemisphereLight args={[darkMode ? '#a9b9d0' : '#ffffff', darkMode ? '#263243' : '#d6deea', darkMode ? 0.75 : 1.1]} />
         <directionalLight position={[3, 6, 5]} intensity={2.2} />
         <directionalLight position={[-4, 3, -3]} intensity={0.6} />
 
         <Conductor />
         <CameraRig />
-        <Floor />
+      <Floor darkMode={darkMode} />
         <ContactShadows position={[0, 0.01, 0]} scale={10} far={3} blur={2.4} opacity={0.6} resolution={512} frames={60} color="#000000" />
         <Ambient />
         <Lights />

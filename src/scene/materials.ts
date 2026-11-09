@@ -74,7 +74,7 @@ export function updateMaterials(dt: number, t: number) {
 
   // Eyes: glow brighter on the beat, dim gray when paused. Boot flicker is handled by the robot (visibility).
   eyeIntensity += ((dimmed ? 1 : 2.4 + pulse * 1.6) - eyeIntensity) * k;
-  mats.eyes.color.lerp(dimmed ? DIM : target.set(hex.halftone).multiplyScalar(eyeIntensity), k * 2);
+  mats.eyes.color.lerp(dimmed ? DIM : target.set(hex.core).multiplyScalar(eyeIntensity), k * 2);
   mats.accentGlow.color.lerp(
     dimmed ? target.set(hex.halftone).multiplyScalar(0.5) : target.set(hex.halftone).multiplyScalar(1.8 + pulse * 2),
     k * 2,

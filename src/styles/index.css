@@ -2,12 +2,12 @@
 @import './tokens.css';
 
 @theme {
-  --color-canvas: #f4f7fb;
-  --color-surface: #ffffff;
-  --color-elevated: #ffffff;
-  --color-ink: #17243b;
-  --color-muted: #53627a;
-  --color-hairline: rgba(65, 87, 118, 0.16);
+  --color-canvas: var(--bg-primary);
+  --color-surface: var(--bg-surface);
+  --color-elevated: var(--bg-elevated);
+  --color-ink: var(--text-primary);
+  --color-muted: var(--text-muted);
+  --color-hairline: var(--border-subtle);
   --color-blue: #6f9fd2;
   --color-green: #8eb6a1;
   --color-yellow: #d8b46a;
@@ -71,8 +71,8 @@ h1, h2, h3 { text-wrap: balance; }
   min-height: 2.5rem;
   border-radius: 999px;
   border: 1px solid transparent;
-  background: #17243b;
-  color: #ffffff;
+  background: var(--text-primary);
+  color: var(--bg-primary);
   font-family: var(--font-display);
   font-weight: 500;
   cursor: pointer;
@@ -91,7 +91,7 @@ h1, h2, h3 { text-wrap: balance; }
   min-width: 2.5rem;
   border-radius: 999px;
   border: 1px solid var(--border-subtle);
-  background: rgba(255, 255, 255, 0.72);
+  background: var(--bg-surface);
   color: var(--text-primary);
   font-family: var(--font-display);
   font-weight: 500;
@@ -110,7 +110,7 @@ input[type='range'].volume { accent-color: var(--accent-core); width: 100%; min-
   min-height: 2.5rem;
   border-radius: 999px;
   border: 1px solid var(--border-subtle);
-  background: rgba(255, 255, 255, 0.72);
+  background: var(--bg-surface);
   color: var(--text-primary);
   font-family: var(--font-sans);
   font-size: 0.9rem;

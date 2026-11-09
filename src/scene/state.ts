@@ -20,6 +20,11 @@ export const scene = {
   started: false,
   /** Scene clock time (seconds) when the user pressed Start, or -1 before. Drives the intro. */
   startedAt: -1,
+  /** Accumulated playback time for scheduling occasional camera tours. */
+  playTime: 0,
+  cameraTour: 0,
+  cameraTourSide: 4.4,
+  darkMode: false,
   /** Current track progress 0..1. */
   progress: 0,
   /** Continuous beat counter; only advances while music plays. */

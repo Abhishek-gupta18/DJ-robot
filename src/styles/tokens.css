@@ -31,6 +31,20 @@
   --font-mono: 'Google Sans Mono', ui-monospace, SFMono-Regular, monospace;
 }
 
+[data-theme='dark'] {
+  color-scheme: dark;
+  --bg-primary: #101722;
+  --bg-surface: rgba(24, 34, 49, 0.88);
+  --bg-elevated: #1c293b;
+  --text-primary: #edf3fc;
+  --text-muted: #aab8cd;
+  --border-subtle: rgba(174, 194, 222, 0.2);
+  --pastel-blue: #233a55;
+  --pastel-green: #263e35;
+  --pastel-yellow: #473b25;
+  --pastel-red: #482d35;
+}
+
 /* Deterministic accent rotation: data-accent drives the three-tier harmony */
 [data-accent='blue'] { --accent-core: var(--blue-500); --accent-halftone: var(--halftone-blue); --accent-pastel: var(--pastel-blue); }
 [data-accent='red'] { --accent-core: var(--red-500); --accent-halftone: var(--halftone-red); --accent-pastel: var(--pastel-red); }
