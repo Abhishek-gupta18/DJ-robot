@@ -1,8 +1,8 @@
 let tokenCache: { token: string; expiresAt: number } | null = null;
 
-const SPOTIFY_CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
-const SPOTIFY_CLIENT_SECRET = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
-const YOUTUBE_API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
+const SPOTIFY_CLIENT_ID = import.meta.env.SPOTIFY_CLIENT_ID;
+const SPOTIFY_CLIENT_SECRET = import.meta.env.SPOTIFY_CLIENT_SECRET;
+const YOUTUBE_API_KEY = import.meta.env.YOUTUBE_API_KEY;
 
 export function extractPlaylistId(url: string): string | null {
   const match = url.match(/playlist\/([a-zA-Z0-9]+)/);
@@ -23,7 +23,7 @@ export function hasYouTubeApiKey(): boolean {
 
 async function getAccessToken(): Promise<string> {
   if (!SPOTIFY_CLIENT_ID || !SPOTIFY_CLIENT_SECRET) {
-    throw new Error('Spotify credentials not configured. Add VITE_SPOTIFY_CLIENT_ID and VITE_SPOTIFY_CLIENT_SECRET to .env');
+    throw new Error('Spotify credentials not configured. Add SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET to .env');
   }
 
   const now = Date.now();

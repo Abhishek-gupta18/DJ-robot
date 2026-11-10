@@ -68,11 +68,11 @@ export function StartOverlay({ player }: { player: PlayerApi }) {
     // For Spotify: need both Spotify creds and YouTube API key
     if (type === 'spotify') {
       if (!credentialsConfigured) {
-        setPlaylistError('Spotify credentials not configured. Add VITE_SPOTIFY_CLIENT_ID and VITE_SPOTIFY_CLIENT_SECRET to .env');
+        setPlaylistError('Spotify credentials not configured. Add SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET to .env');
         return;
       }
       if (!youtubeConfigured) {
-        setPlaylistError('YouTube API key not configured. Add VITE_YOUTUBE_API_KEY to .env');
+        setPlaylistError('YouTube API key not configured. Add YOUTUBE_API_KEY to .env');
         return;
       }
     }
@@ -174,10 +174,10 @@ export function StartOverlay({ player }: { player: PlayerApi }) {
               </p>
               <ul className="text-sm text-muted space-y-1 pl-4 list-disc">
                 {!credentialsConfigured && (
-                  <li><code className="font-mono">VITE_SPOTIFY_CLIENT_ID</code> & <code className="font-mono">VITE_SPOTIFY_CLIENT_SECRET</code> (from <a href="https://developer.spotify.com/dashboard" target="_blank" rel="noopener" className="underline">Spotify Developer Dashboard</a>)</li>
+                  <li><code className="font-mono">SPOTIFY_CLIENT_ID</code> & <code className="font-mono">SPOTIFY_CLIENT_SECRET</code> (from <a href="https://developer.spotify.com/dashboard" target="_blank" rel="noopener" className="underline">Spotify Developer Dashboard</a>)</li>
                 )}
                 {!youtubeConfigured && (
-                  <li><code className="font-mono">VITE_YOUTUBE_API_KEY</code> (from <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener" className="underline">Google Cloud Console</a>)</li>
+                  <li><code className="font-mono">YOUTUBE_API_KEY</code> (from <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener" className="underline">Google Cloud Console</a>)</li>
                 )}
               </ul>
               <p className="text-xs text-muted">YouTube playlists work without extra keys. Copy <code className="font-mono">.env.example</code> to <code className="font-mono">.env</code> and fill in your keys.</p>
