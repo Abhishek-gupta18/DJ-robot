@@ -5,8 +5,6 @@ import { ArrowRight, SpotifyIcon, YouTubeIcon } from './Icons';
 import { 
   fetchPlaylistTracks, 
   searchYouTubeBatch, 
-  hasSpotifyCredentials, 
-  hasYouTubeApiKey, 
   clearTokenCache 
 } from '../lib/spotify';
 import { detectPlaylistType, extractPlaylistId, getPlaceholderForType, type PlaylistType } from '../lib/playlist-detector';
@@ -23,9 +21,6 @@ const item: Variants = {
   hidden: { opacity: 0, y: 10 },
   show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: EASE } },
 };
-
-const credentialsConfigured = hasSpotifyCredentials();
-const youtubeConfigured = hasYouTubeApiKey();
 
 function getPlaylistIcon(type: PlaylistType) {
   switch (type) {
@@ -63,18 +58,6 @@ export function StartOverlay({ player }: { player: PlayerApi }) {
     if (!playlistId) {
       setPlaylistError(`Invalid ${type === 'spotify' ? 'Spotify' : 'YouTube'} playlist URL`);
       return;
-    }
-
-    // For Spotify: need both Spotify creds and YouTube API key
-    if (type === 'spotify') {
-      if (!credentialsConfigured) {
-        setPlaylistError('Spotify credentials not configured. Add SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET to .env');
-        return;
-      }
-      if (!youtubeConfigured) {
-        setPlaylistError('YouTube API key not configured. Add YOUTUBE_API_KEY to .env');
-        return;
-      }
     }
 
     setPlaylistLoading(true);
@@ -167,21 +150,6 @@ export function StartOverlay({ player }: { player: PlayerApi }) {
             <p className="font-mono text-sm" style={{ color: 'var(--halftone-red)' }}>
               {`// ${player.error}`}
             </p>
-          ) : !credentialsConfigured || !youtubeConfigured ? (
-            <div className="space-y-3">
-              <p className="text-sm text-muted">
-                Spotify integration requires API keys. Add to <code className="font-mono">.env</code>:
-              </p>
-              <ul className="text-sm text-muted space-y-1 pl-4 list-disc">
-                {!credentialsConfigured && (
-                  <li><code className="font-mono">SPOTIFY_CLIENT_ID</code> & <code className="font-mono">SPOTIFY_CLIENT_SECRET</code> (from <a href="https://developer.spotify.com/dashboard" target="_blank" rel="noopener" className="underline">Spotify Developer Dashboard</a>)</li>
-                )}
-                {!youtubeConfigured && (
-                  <li><code className="font-mono">YOUTUBE_API_KEY</code> (from <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener" className="underline">Google Cloud Console</a>)</li>
-                )}
-              </ul>
-              <p className="text-xs text-muted">YouTube playlists work without extra keys. Copy <code className="font-mono">.env.example</code> to <code className="font-mono">.env</code> and fill in your keys.</p>
-            </div>
           ) : showPlaylistInput ? (
             <form onSubmit={handleSubmit} className="space-y-3">
               <div className="flex items-center gap-2">

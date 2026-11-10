@@ -1,8 +1,7 @@
 let tokenCache: { token: string; expiresAt: number } | null = null;
 
-const SPOTIFY_CLIENT_ID = import.meta.env.SPOTIFY_CLIENT_ID;
-const SPOTIFY_CLIENT_SECRET = import.meta.env.SPOTIFY_CLIENT_SECRET;
-const YOUTUBE_API_KEY = import.meta.env.YOUTUBE_API_KEY;
+const SPOTIFY_CLIENT_ID = import.meta.env.SPOTIFY_CLIENT_ID || '';
+const SPOTIFY_CLIENT_SECRET = import.meta.env.SPOTIFY_CLIENT_SECRET || '';
 
 export function extractPlaylistId(url: string): string | null {
   const match = url.match(/playlist\/([a-zA-Z0-9]+)/);
@@ -18,7 +17,7 @@ export function hasSpotifyCredentials(): boolean {
 }
 
 export function hasYouTubeApiKey(): boolean {
-  return !!YOUTUBE_API_KEY;
+  return true;
 }
 
 async function getAccessToken(): Promise<string> {
@@ -102,14 +101,9 @@ export function createSearchQuery(track: SpotifyTrack): string {
 }
 
 export async function searchYouTube(query: string): Promise<string | null> {
-  if (!YOUTUBE_API_KEY) {
-    console.warn('YouTube API key not configured');
-    return null;
-  }
-
   const encodedQuery = encodeURIComponent(query);
   const response = await fetch(
-    `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${encodedQuery}&maxResults=1&key=${YOUTUBE_API_KEY}`
+    `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${encodedQuery}&maxResults=1`
   );
 
   if (!response.ok) return null;
